@@ -1,34 +1,84 @@
 
 import static java.lang.System.*;
+import java.awt.*;
+//import java.awt.Graphics.*;
+//import java.awt.Frame.*;
 
-public class Grid
+/*import javafx.application.Application;
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
+import javafx.scene.Scene;
+import javafx.scene.text.*;
+import javafx.scene.Group;
+import javafx.scene.control.Button;
+import javafx.scene.control.Label;
+import javafx.scene.layout.StackPane;
+import javafx.scene.layout.VBox;
+import javafx.stage.Stage;
+import javafx.scene.control.*;
+import javafx.scene.layout.*;
+import javafx.scene.paint.*;
+import javafx.geometry.*;
+import javafx.scene.shape.*;
+import javafx.scene.paint.Color;
+import javafx.scene.text.Font;
+import javafx.scene.text.Text;
+import javafx.stage.Stage;*/
+
+public class Grid extends JDrawingFrame //780 x 560
 {
-   private final int BY;
-   private int size;
+   private final int BY, FRAMEW, FRAMEH;
+   private final double GRIDSIZE;
+   private int size, boxDi, startX, startY, strwt;
    private Node head, tail;
    
    public Grid(int by)
    {
       this.BY = by;
+      this.FRAMEW = 780;
+      this.FRAMEH = 560;
+      this.GRIDSIZE = 450;
+      this.boxDi = (int)(GRIDSIZE/BY);
+      this.startX = (int)((FRAMEW-GRIDSIZE)/2);
+      this.startY = (int)(((FRAMEH-GRIDSIZE)/2) + GRIDSIZE - boxDi);
+      this.strwt = 2;
       this.head = null;
       this.tail = null;
-      this.size = 0;
+      this.size = 0; 
    }
    
    public void gridGen()
    {
       clearGrid();
+      
+      int x = this.startX;
+      int y = this.startY;
+      int c = 0;
       for(int i = 1; i <= (Math.pow(BY,2)); i++)
       {
-         addX(i);
+         if(c < this.BY)
+         {
+            addX(i,x,y);
+            x += boxDi;
+            c++;
+         }
+         else
+         {
+            x = this.startX;
+            y -= this.boxDi;
+            c = 0;
+            addX(i,x,y);
+         }
       } 
+      
       addY();
+      makeGrid();
       breakSides();
    }
    
-   private void addX(int x)
+   private void addX(int i,int x, int y)
    {
-      Node n = new Node(x);
+      Node n = new Node(i,x,y);
       
       if(this.tail == null)
       {
@@ -78,6 +128,29 @@ public class Grid
       }
    }
    
+   private void clearGrid()
+   {
+      this.head = null;
+      this.tail = null;
+      this.size = 0;
+   }
+   
+   private void makeGrid()
+   {
+      Node temp = this.head;
+      
+      int q = 0;
+      while(temp != null)
+      {
+         setColor(Color.RED);
+         pen.fillRect(temp.boxX, temp.boxY, boxDi, boxDi);
+         setColor(Color.WHITE);
+         pen.drawRect(temp.boxX, temp.boxY, boxDi, boxDi);
+         q++;
+         temp = temp.next;
+      }
+   }
+   
    public Node getHead()
    {
       return this.head;
@@ -93,21 +166,21 @@ public class Grid
       return this.BY;
    }
    
-   public int getSize()
+   public int getLLSize()
    {
       return this.size;
    }
    
-   private void clearGrid()
+   public void display()
    {
-      this.head = null;
-      this.tail = null;
-      this.size = 0;
+      showFrame();
    }
    
    public String toString()
    {  
       String s = "";
+      /*s = "by: " + this.BY + "\nframe width: " + this.FRAMEW + "\nframe height: " + this.FRAMEH + "\ngridsize: " + this.GRIDSIZE + 
+                  "\nbox dimension: " + this.boxDi + "\nstart x: " + this.startX + "\nstart y: " + this.startY;*/
       
       Node temp = this.tail;
       for(int i = 1; i < BY; i ++)
