@@ -1,7 +1,31 @@
 
 import static java.lang.System.*;
+import java.awt.*;
+//import java.awt.Graphics.*;
+//import java.awt.Frame.*;
 
-public class Path
+/*import javafx.application.Application;
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
+import javafx.scene.Scene;
+import javafx.scene.text.*;
+import javafx.scene.Group;
+import javafx.scene.control.Button;
+import javafx.scene.control.Label;
+import javafx.scene.layout.StackPane;
+import javafx.scene.layout.VBox;
+import javafx.stage.Stage;
+import javafx.scene.control.*;
+import javafx.scene.layout.*;
+import javafx.scene.paint.*;
+import javafx.geometry.*;
+import javafx.scene.shape.*;
+import javafx.scene.paint.Color;
+import javafx.scene.text.Font;
+import javafx.scene.text.Text;
+import javafx.stage.Stage;*/
+
+public class Path extends JDrawingFrame //780 x 560
 {
    private Grid grid;
    private final int MAX;
@@ -10,7 +34,7 @@ public class Path
    private String path;
    public Path()
    {
-      this.grid = new Grid(8);
+      this.grid = new Grid(5);
       this.MAX = (int)( ( ( Math.pow(this.grid.getBY(),2) ) ) / 3.0 );
       this.moves = 0;
       this.run = true;
@@ -44,17 +68,17 @@ public class Path
          this.moves++;
          while( (this.run == true) && (this.moves <= this.MAX) )
          {
-            if( (this.moves == this.MAX) && ( temp.data <= (this.grid.getSize() - this.grid.getBY()) ) )
+            if( (this.moves == this.MAX) && ( temp.data <= (this.grid.getLLSize() - this.grid.getBY()) ) )
             {
                this.run = true;
                this.moves++;
             }
-            else if( ( (temp.next == null) && (temp.prev == null) && (temp.up == null) && (temp.down== null) ) && ( temp.data <= (this.grid.getSize() - this.grid.getBY()) ) )
+            else if( ( (temp.next == null) && (temp.prev == null) && (temp.up == null) && (temp.down== null) ) && ( temp.data <= (this.grid.getLLSize() - this.grid.getBY()) ) )
             {
                this.run = true;
                this.moves = this.MAX+1;
             }
-            else if( temp.data > (this.grid.getSize() - this.grid.getBY()) )
+            else if( temp.data > (this.grid.getLLSize() - this.grid.getBY()) )
             {
                this.run = false;
                this.refresh = false;
@@ -177,9 +201,19 @@ public class Path
          return pickDirc(temp); 
       }
    }
+   
+   public void testDraw() //780 X 560
+   {
+      //pen.setStrokeWeight(2);
+      setColor(Color.RED);
+      pen.fillRect(165,55,450,450);
+      setColor(Color.WHITE);
+      pen.drawRect(165,55,450,450);
+   }
       
    public String toString()
    {  
+      grid.display();
       return path;
    }
-}  
+}    
