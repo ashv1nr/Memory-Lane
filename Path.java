@@ -34,7 +34,7 @@ public class Path extends JDrawingFrame //780 x 560
    private String path;
    public Path()
    {
-      this.grid = new Grid(5);
+      this.grid = new Grid(7);
       this.MAX = (int)( ( ( Math.pow(this.grid.getBY(),2) ) ) / 3.0 );
       this.moves = 0;
       this.run = true;
@@ -89,6 +89,7 @@ public class Path extends JDrawingFrame //780 x 560
                {
                   temp = pickDirc(temp);
                   path += temp.data + " ";
+                  //grid.drawGreen(temp);
                   this.moves++;
                }
             }
@@ -201,19 +202,10 @@ public class Path extends JDrawingFrame //780 x 560
          return pickDirc(temp); 
       }
    }
-   
-   public void testDraw() //780 X 560
-   {
-      //pen.setStrokeWeight(2);
-      setColor(Color.RED);
-      pen.fillRect(165,55,450,450);
-      setColor(Color.WHITE);
-      pen.drawRect(165,55,450,450);
-   }
       
    public String toString()
    {  
       grid.display();
       return path;
    }
-}    
+}  
