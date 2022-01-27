@@ -59,17 +59,18 @@ public class Grid extends JDrawingFrame //780 x 560
          if(c < this.BY)
          {
             addX(i,x,y);
-            x += boxDi;
+            x += this.boxDi;
             c++;
          }
          else
          {
             x = this.startX;
             y -= this.boxDi;
-            c = 0;
+            c = 1;
             addX(i,x,y);
+            x += this.boxDi;
          }
-      } 
+      }  
       
       addY();
       makeGrid();
@@ -139,16 +140,23 @@ public class Grid extends JDrawingFrame //780 x 560
    {
       Node temp = this.head;
       
-      int q = 0;
       while(temp != null)
       {
          setColor(Color.RED);
          pen.fillRect(temp.boxX, temp.boxY, boxDi, boxDi);
          setColor(Color.WHITE);
          pen.drawRect(temp.boxX, temp.boxY, boxDi, boxDi);
-         q++;
+         //draw data on boxes and fix drawGreen***
          temp = temp.next;
       }
+   }
+   
+   public void drawGreen(Node temp)
+   {
+      setColor(Color.GREEN);
+      pen.fillRect(temp.boxX, temp.boxY, boxDi, boxDi);
+      setColor(Color.WHITE);
+      pen.drawRect(temp.boxX, temp.boxY, boxDi, boxDi);
    }
    
    public Node getHead()
