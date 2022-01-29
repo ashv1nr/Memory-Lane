@@ -1,31 +1,32 @@
 
 import static java.lang.System.*;
-import java.awt.*;
-//import java.awt.Graphics.*;
-//import java.awt.Frame.*;
 
-/*import javafx.application.Application;
+//import java.awt.*;
+//import java.awt.Frame.*;
+//import java.awt.Graphics.*;
+
+import javafx.application.Application;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
-import javafx.scene.Scene;
-import javafx.scene.text.*;
-import javafx.scene.Group;
+import javafx.geometry.*;
+import javafx.stage.Stage;
+
+import javafx.scene.control.*;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.Group;
+import javafx.scene.layout.*;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
-import javafx.stage.Stage;
-import javafx.scene.control.*;
-import javafx.scene.layout.*;
 import javafx.scene.paint.*;
-import javafx.geometry.*;
-import javafx.scene.shape.*;
 import javafx.scene.paint.Color;
+import javafx.scene.Scene;
+import javafx.scene.shape.*;
+import javafx.scene.text.*;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
-import javafx.stage.Stage;*/
 
-public class Path extends JDrawingFrame //780 x 560
+public class Path extends Application //extends JDrawingFrame //780 x 560
 {
    private Grid grid;
    private final int MAX;
@@ -34,7 +35,7 @@ public class Path extends JDrawingFrame //780 x 560
    private String path;
    public Path()
    {
-      this.grid = new Grid(7);
+      this.grid = new Grid(8);
       this.MAX = (int)( ( ( Math.pow(this.grid.getBY(),2) ) ) / 3.0 );
       this.moves = 0;
       this.run = true;
@@ -65,6 +66,7 @@ public class Path extends JDrawingFrame //780 x 560
             temp = temp.next;
          }
          path += temp.data + " ";
+         grid.drawGreen(temp);
          this.moves++;
          while( (this.run == true) && (this.moves <= this.MAX) )
          {
@@ -89,7 +91,7 @@ public class Path extends JDrawingFrame //780 x 560
                {
                   temp = pickDirc(temp);
                   path += temp.data + " ";
-                  //grid.drawGreen(temp);
+                  grid.drawGreen(temp);
                   this.moves++;
                }
             }
@@ -202,10 +204,21 @@ public class Path extends JDrawingFrame //780 x 560
          return pickDirc(temp); 
       }
    }
+   
+   public Group getLayout()
+   {
+      return this.grid.getLayout();
+   }
+   
+    //@Override
+    public void start(Stage primaryStage) throws Exception
+    {
+      int x = -1;
+    }
       
    public String toString()
    {  
-      grid.display();
+      //grid.display();
       return path;
    }
 }  
