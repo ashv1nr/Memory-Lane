@@ -1,36 +1,44 @@
 
 import static java.lang.System.*;
-import java.awt.*;
-//import java.awt.Graphics.*;
-//import java.awt.Frame.*;
+import java.io.*;
 
-/*import javafx.application.Application;
+//import java.awt.*;
+//import java.awt.Frame.*;
+//import java.awt.Graphics.*;
+
+import javafx.application.Application;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
-import javafx.scene.Scene;
-import javafx.scene.text.*;
-import javafx.scene.Group;
+import javafx.geometry.*;
+import javafx.stage.Stage;
+
+import javafx.scene.control.*;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.Group;
+import javafx.scene.layout.*;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
-import javafx.stage.Stage;
-import javafx.scene.control.*;
-import javafx.scene.layout.*;
 import javafx.scene.paint.*;
-import javafx.geometry.*;
-import javafx.scene.shape.*;
 import javafx.scene.paint.Color;
+import javafx.scene.Scene;
+import javafx.scene.shape.*;
+import javafx.scene.text.*;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
-import javafx.stage.Stage;*/
 
-public class Grid extends JDrawingFrame //780 x 560
+public class Grid extends Application //extends JDrawingFrame //780 x 560
 {
    private final int BY, FRAMEW, FRAMEH;
    private final double GRIDSIZE;
    private int size, boxDi, startX, startY, strwt;
    private Node head, tail;
+   
+   private Group layout;
+   
+   /*private Stage window;
+   private Scene scene;
+   private Group layout;*/
    
    public Grid(int by)
    {
@@ -45,6 +53,10 @@ public class Grid extends JDrawingFrame //780 x 560
       this.head = null;
       this.tail = null;
       this.size = 0; 
+      
+      //window = primaryStage;
+      //scene = new Scene(layout, 780, 560);
+      layout = new Group();
    }
    
    public void gridGen()
@@ -142,21 +154,34 @@ public class Grid extends JDrawingFrame //780 x 560
       
       while(temp != null)
       {
-         setColor(Color.RED);
+         /*setColor(Color.RED);
          pen.fillRect(temp.boxX, temp.boxY, boxDi, boxDi);
          setColor(Color.WHITE);
-         pen.drawRect(temp.boxX, temp.boxY, boxDi, boxDi);
-         //draw data on boxes and fix drawGreen***
+         pen.drawRect(temp.boxX, temp.boxY, boxDi, boxDi);*/
+         
+         temp.btn.setStyle("-fx-background-color: #D22B2B; ");
+         temp.btn.setPrefSize(boxDi, boxDi);
+         temp.btn.setLayoutX(temp.boxX);
+         temp.btn.setLayoutY(temp.boxY);
+         layout.getChildren().add(temp.btn);
          temp = temp.next;
       }
    }
    
    public void drawGreen(Node temp)
    {
-      setColor(Color.GREEN);
+      /*setColor(Color.GREEN);
       pen.fillRect(temp.boxX, temp.boxY, boxDi, boxDi);
       setColor(Color.WHITE);
-      pen.drawRect(temp.boxX, temp.boxY, boxDi, boxDi);
+      pen.drawRect(temp.boxX, temp.boxY, boxDi, boxDi);*/
+      
+      layout.getChildren().remove(temp.btn);
+      temp.btn.setStyle("-fx-background-color: #50C878; ");
+      temp.btn.setPrefSize(boxDi, boxDi);
+      temp.btn.setLayoutX(temp.boxX);
+      temp.btn.setLayoutY(temp.boxY);
+      layout.getChildren().add(temp.btn);
+      
    }
    
    public Node getHead()
@@ -179,10 +204,26 @@ public class Grid extends JDrawingFrame //780 x 560
       return this.size;
    }
    
-   public void display()
+   public Group getLayout()
    {
-      showFrame();
+      return this.layout;
    }
+   
+   /*public void display()
+   {
+      //showFrame();
+      
+     scene = new Scene(layout, 780, 560);
+     window.setScene(scene);   
+     window.setTitle("Memory Lane");
+     window.show();
+   }*/
+   
+    //@Override
+    public void start(Stage primaryStage) throws Exception
+    {
+      int x = -1;
+    }
    
    public String toString()
    {  
