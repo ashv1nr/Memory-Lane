@@ -1,10 +1,6 @@
 
 import static java.lang.System.*;
-import java.io.*;
-
-//import java.awt.*;
-//import java.awt.Frame.*;
-//import java.awt.Graphics.*;
+import java.util.ArrayList;
 
 import javafx.application.Application;
 import javafx.event.ActionEvent;
@@ -27,18 +23,14 @@ import javafx.scene.text.*;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 
-public class Grid extends Application //extends JDrawingFrame //780 x 560
+public class Grid extends Application //JDrawingFrame 780 x 560
 {
    private final int BY, FRAMEW, FRAMEH;
    private final double GRIDSIZE;
    private int size, boxDi, startX, startY, strwt;
    private Node head, tail;
-   
    private Group layout;
-   
-   /*private Stage window;
-   private Scene scene;
-   private Group layout;*/
+   private ArrayList<Node> nodes;
    
    public Grid(int by)
    {
@@ -53,10 +45,8 @@ public class Grid extends Application //extends JDrawingFrame //780 x 560
       this.head = null;
       this.tail = null;
       this.size = 0; 
-      
-      //window = primaryStage;
-      //scene = new Scene(layout, 780, 560);
-      layout = new Group();
+      this.layout = new Group();
+      this.nodes = new ArrayList<Node>();
    }
    
    public void gridGen()
@@ -92,6 +82,7 @@ public class Grid extends Application //extends JDrawingFrame //780 x 560
    private void addX(int i,int x, int y)
    {
       Node n = new Node(i,x,y);
+      this.nodes.add(n);
       
       if(this.tail == null)
       {
@@ -153,35 +144,43 @@ public class Grid extends Application //extends JDrawingFrame //780 x 560
       Node temp = this.head;
       
       while(temp != null)
-      {
-         /*setColor(Color.RED);
-         pen.fillRect(temp.boxX, temp.boxY, boxDi, boxDi);
-         setColor(Color.WHITE);
-         pen.drawRect(temp.boxX, temp.boxY, boxDi, boxDi);*/
-         
-         temp.btn.setStyle("-fx-background-color: #D22B2B; ");
+      {  
+         temp.btn.setFont(Font.font ("Impact", 18));
+         temp.btn.setText("" + temp.data);
          temp.btn.setPrefSize(boxDi, boxDi);
          temp.btn.setLayoutX(temp.boxX);
          temp.btn.setLayoutY(temp.boxY);
-         layout.getChildren().add(temp.btn);
+         this.layout.getChildren().add(temp.btn);
          temp = temp.next;
       }
    }
    
-   public void drawGreen(Node temp)
+   public void drawGreen(int i)
    {
-      /*setColor(Color.GREEN);
-      pen.fillRect(temp.boxX, temp.boxY, boxDi, boxDi);
-      setColor(Color.WHITE);
-      pen.drawRect(temp.boxX, temp.boxY, boxDi, boxDi);*/
+      Node temp = nodes.get(i-1);
       
-      layout.getChildren().remove(temp.btn);
+      this.layout.getChildren().remove(temp.btn);
       temp.btn.setStyle("-fx-background-color: #50C878; ");
+      temp.btn.setFont(Font.font ("Impact", 18));
+      temp.btn.setText("" + temp.data);
       temp.btn.setPrefSize(boxDi, boxDi);
       temp.btn.setLayoutX(temp.boxX);
       temp.btn.setLayoutY(temp.boxY);
-      layout.getChildren().add(temp.btn);
+      this.layout.getChildren().add(temp.btn); 
+   }
+   
+   public void drawRed(int i)
+   {
+      Node temp = nodes.get(i-1);
       
+      this.layout.getChildren().remove(temp.btn);
+      temp.btn.setStyle("-fx-background-color: #D22B2B; ");
+      temp.btn.setFont(Font.font ("Impact", 18));
+      temp.btn.setText("" + temp.data);
+      temp.btn.setPrefSize(boxDi, boxDi);
+      temp.btn.setLayoutX(temp.boxX);
+      temp.btn.setLayoutY(temp.boxY);
+      this.layout.getChildren().add(temp.btn); 
    }
    
    public Node getHead()
@@ -209,16 +208,6 @@ public class Grid extends Application //extends JDrawingFrame //780 x 560
       return this.layout;
    }
    
-   /*public void display()
-   {
-      //showFrame();
-      
-     scene = new Scene(layout, 780, 560);
-     window.setScene(scene);   
-     window.setTitle("Memory Lane");
-     window.show();
-   }*/
-   
     //@Override
     public void start(Stage primaryStage) throws Exception
     {
@@ -228,8 +217,6 @@ public class Grid extends Application //extends JDrawingFrame //780 x 560
    public String toString()
    {  
       String s = "";
-      /*s = "by: " + this.BY + "\nframe width: " + this.FRAMEW + "\nframe height: " + this.FRAMEH + "\ngridsize: " + this.GRIDSIZE + 
-                  "\nbox dimension: " + this.boxDi + "\nstart x: " + this.startX + "\nstart y: " + this.startY;*/
       
       Node temp = this.tail;
       for(int i = 1; i < BY; i ++)
