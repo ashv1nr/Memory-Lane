@@ -1,10 +1,5 @@
 
 import static java.lang.System.*;
-import java.io.*;
-
-//import java.awt.*;
-//import java.awt.Frame.*;
-//import java.awt.Graphics.*;
 
 import javafx.application.Application;
 import javafx.event.ActionEvent;
@@ -29,19 +24,14 @@ import javafx.scene.text.Text;
 
 public class Node extends Application
 {
-   /*public static void main(String[] args)
-   {
-      Path path = new Path();
-      path.pathGen();
-      out.println(path);
-   }*/
-   
+   private Main main;
    public Node prev, next, up, down;
    public int data, boxX, boxY;
    public Button btn;
    
    public Node(int n, int x, int y)
    {
+      this.main = new Main();
       this.prev = null;
       this.next = null;
       this.up = null;
@@ -49,13 +39,13 @@ public class Node extends Application
       this.data = n;
       this.boxX = x;
       this.boxY = y;
-      
-      btn = new Button();
+      this.btn = new Button();
+      this.btn.setOnAction(e -> this.main.setColor(this.data));
    }
    
     //@Override
     public void start(Stage primaryStage) throws Exception
     {
       int x = -1;
-    }
+    }   
 }
