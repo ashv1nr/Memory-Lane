@@ -1,10 +1,6 @@
 
 import static java.lang.System.*;
 
-//import java.awt.*;
-//import java.awt.Frame.*;
-//import java.awt.Graphics.*;
-
 import javafx.application.Application;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
@@ -32,7 +28,7 @@ public class Path extends Application //extends JDrawingFrame //780 x 560
    private final int MAX;
    private int moves;
    private boolean run, refresh, printToString;
-   private String path;
+   private String sol;
    public Path()
    {
       this.grid = new Grid(8);
@@ -41,7 +37,7 @@ public class Path extends Application //extends JDrawingFrame //780 x 560
       this.run = true;
       this.refresh = true;
       this.printToString = true;
-      this.path = "";
+      this.sol = " ";
    }
    
    public void pathGen()
@@ -57,7 +53,7 @@ public class Path extends Application //extends JDrawingFrame //780 x 560
             out.println(grid.toString());
             printToString = false;
          }
-         path = "";
+         this.sol = " ";
          n = (int)( (Math.random() * this.grid.getBY() ) + 1 ); 
          this.moves = 0;
          temp = this.grid.getHead();
@@ -65,8 +61,8 @@ public class Path extends Application //extends JDrawingFrame //780 x 560
          {
             temp = temp.next;
          }
-         path += temp.data + " ";
-         grid.drawGreen(temp);
+         this.sol += temp.data + " ";
+         //this.grid.drawGreen(temp);
          this.moves++;
          while( (this.run == true) && (this.moves <= this.MAX) )
          {
@@ -90,8 +86,8 @@ public class Path extends Application //extends JDrawingFrame //780 x 560
                if(this.moves < this.MAX)
                {
                   temp = pickDirc(temp);
-                  path += temp.data + " ";
-                  grid.drawGreen(temp);
+                  this.sol += temp.data + " ";
+                  //this.grid.drawGreen(temp);
                   this.moves++;
                }
             }
@@ -210,6 +206,19 @@ public class Path extends Application //extends JDrawingFrame //780 x 560
       return this.grid.getLayout();
    }
    
+       
+    public void setColor(int d)
+    {
+      if(this.sol.indexOf(" " + d + " " ) != -1)
+      {
+         this.grid.drawGreen(d);
+      }
+      else
+      {
+         this.grid.drawRed(d);
+      }
+    }
+   
     //@Override
     public void start(Stage primaryStage) throws Exception
     {
@@ -219,6 +228,6 @@ public class Path extends Application //extends JDrawingFrame //780 x 560
    public String toString()
    {  
       //grid.display();
-      return path;
+      return this.sol;
    }
 }  
