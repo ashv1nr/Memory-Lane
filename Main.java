@@ -2,10 +2,6 @@
 import static java.lang.System.*;
 import java.io.*;
 
-//import java.awt.*;
-//import java.awt.Frame.*;
-//import java.awt.Graphics.*;
-
 import javafx.application.Application;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
@@ -29,9 +25,10 @@ import javafx.scene.text.Text;
 
 public class Main extends Application
 {
+   private Path path;
+   private static Path tempPath;
    private Stage window;
    private Scene scene;
-   //public Group layout;
    
    public static void main(String[] args) throws IOException
    {      
@@ -41,16 +38,21 @@ public class Main extends Application
     //@Override
     public void start(Stage primaryStage) throws Exception
     {
-      window = primaryStage;
+      this.window = primaryStage;
       
-      Path path = new Path();
-      path.pathGen();
+      this.path = new Path();
+      this.path.pathGen();
+      this.tempPath = this.path;
+      out.println(this.path);
 
-     scene = new Scene(path.getLayout(), 780, 560);
-     window.setScene(scene);   
-     window.setTitle("Memory Lane");
-     window.show();
-      
-     out.println(path);
+     this.scene = new Scene(path.getLayout(), 780, 560);
+     this.window.setScene(scene);   
+     this.window.setTitle("Memory Lane");
+     this.window.show();
+    }
+    
+    public void setColor(int d)
+    {
+      this.tempPath.setColor(d);
     }
 }
