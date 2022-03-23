@@ -40,6 +40,7 @@ public class Node extends Application
       this.boxX = x;
       this.boxY = y;
       this.btn = new Button();
+      this.btn.setStyle("-fx-background-color: #B2BEB5; ");
       this.btn.setOnAction(e -> this.main.setColor(this.data));
    }
    
