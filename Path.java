@@ -1,7 +1,17 @@
 
 import static java.lang.System.*;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import javafx.util.Duration;
+
+import javafx.animation.PauseTransition;  
 import javafx.application.Application;
+import javafx.application.Platform;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
+import javafx.concurrent.Task;
+import javafx.concurrent.WorkerStateEvent;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.geometry.*;
@@ -26,24 +36,29 @@ public class Path extends Application //extends JDrawingFrame //780 x 560
 {
    private Grid grid;
    private final int MAX;
-   private int moves;
+   private int moves, tempInd;
    private boolean run, refresh, printToString;
    private String sol;
+   private ArrayList<Integer> solArr;
+   
    public Path()
    {
-      this.grid = new Grid(8);
+      this.grid = new Grid(7);
       this.MAX = (int)( ( ( Math.pow(this.grid.getBY(),2) ) ) / 3.0 );
       this.moves = 0;
+      this.tempInd = 0;
       this.run = true;
       this.refresh = true;
       this.printToString = true;
       this.sol = " ";
+      this.solArr = new ArrayList<Integer>();
    }
    
    public void pathGen()
    {  
       int n;
       Node temp;
+      drawPathBtn();
       
       while(this.refresh == true)
       {
@@ -54,6 +69,7 @@ public class Path extends Application //extends JDrawingFrame //780 x 560
             printToString = false;
          }
          this.sol = " ";
+         this.solArr.clear();
          n = (int)( (Math.random() * this.grid.getBY() ) + 1 ); 
          this.moves = 0;
          temp = this.grid.getHead();
@@ -62,7 +78,7 @@ public class Path extends Application //extends JDrawingFrame //780 x 560
             temp = temp.next;
          }
          this.sol += temp.data + " ";
-         //this.grid.drawGreen(temp);
+         this.solArr.add(temp.data);
          this.moves++;
          while( (this.run == true) && (this.moves <= this.MAX) )
          {
@@ -87,7 +103,7 @@ public class Path extends Application //extends JDrawingFrame //780 x 560
                {
                   temp = pickDirc(temp);
                   this.sol += temp.data + " ";
-                  //this.grid.drawGreen(temp);
+                  this.solArr.add(temp.data);
                   this.moves++;
                }
             }
@@ -206,18 +222,108 @@ public class Path extends Application //extends JDrawingFrame //780 x 560
       return this.grid.getLayout();
    }
    
+   private void drawPathBtn()
+   {
+      Button pathBtn = new Button();
+      pathBtn.setFont(Font.font ("Impact", 14));
+      pathBtn.setText("See path");
+      pathBtn.setPrefSize(75, 25);
+      pathBtn.setLayoutX(25);
+      pathBtn.setLayoutY(510);
+      pathBtn.setOnAction(e -> flashPath());
+      this.grid.getLayout().getChildren().add(pathBtn); 
+   }
+   
+   public void flashPath()
+   {
+      
+      Grid g = this.grid;
+      ArrayList<Integer> sa = this.solArr;
+      
+      Thread thread = new Thread(new Runnable() {
+
+            @Override
+            public void run() {
+                Runnable updater = new Runnable() {
+
+                    @Override
+                    public void run() {
+                        if(tempInd == 0)
+                        {
+                           g.drawPath(sa.get(tempInd));
+                           tempInd++;
+                        }
+                        else if(tempInd < sa.size() )
+                        {
+                           g.drawPath(sa.get(tempInd));
+                           g.removePath(sa.get((tempInd-1)));
+                           tempInd++;
+                        }
+                        else
+                        {
+                           g.removePath(sa.get((tempInd-1)));
+                           tempInd++;
+                        }
+                    }
+                };
+
+                
+                while (tempInd < (sa.size()) ) {
+                    try {
+                        Thread.sleep(500);
+                    } catch (InterruptedException ex) {
+                    }
+                    Platform.runLater(updater);
+                }
+            }
+
+        });
+         
+        thread.setDaemon(true);
+        thread.start();
+   }
        
-    public void setColor(int d)
-    {
-      if(this.sol.indexOf(" " + d + " " ) != -1)
-      {
-         this.grid.drawGreen(d);
-      }
-      else
-      {
-         this.grid.drawRed(d);
-      }
-    }
+   public void setColor(int d)
+   {
+     if(d == this.solArr.get(0))
+     {
+        this.solArr.remove(0);
+        this.grid.drawGreen(d);
+     }
+     else
+     {
+        this.grid.drawRed(d);
+        pauseP(1000);
+     }
+   }
+   
+   private void pauseP(int ms)
+   {
+        Task<Void> sleeper = new Task<Void>() 
+        {
+            @Override
+            protected Void call() throws Exception
+            {
+               try 
+               {
+                  Thread.sleep(ms);
+               } 
+               catch (InterruptedException e) 
+               {
+               }
+               return null;
+            }
+       };
+       sleeper.setOnSucceeded(new EventHandler<WorkerStateEvent>() 
+       {
+            @Override
+            public void handle(WorkerStateEvent event) 
+            {
+                exit(0);
+            }
+        });
+        new Thread(sleeper).start();
+   }
    
     //@Override
     public void start(Stage primaryStage) throws Exception
@@ -227,7 +333,6 @@ public class Path extends Application //extends JDrawingFrame //780 x 560
       
    public String toString()
    {  
-      //grid.display();
       return this.sol;
    }
 }  
