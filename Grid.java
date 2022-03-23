@@ -146,7 +146,7 @@ public class Grid extends Application //JDrawingFrame 780 x 560
       while(temp != null)
       {  
          temp.btn.setFont(Font.font ("Impact", 18));
-         temp.btn.setText("" + temp.data);
+         //temp.btn.setText("" + temp.data);
          temp.btn.setPrefSize(boxDi, boxDi);
          temp.btn.setLayoutX(temp.boxX);
          temp.btn.setLayoutY(temp.boxY);
@@ -162,7 +162,7 @@ public class Grid extends Application //JDrawingFrame 780 x 560
       this.layout.getChildren().remove(temp.btn);
       temp.btn.setStyle("-fx-background-color: #50C878; ");
       temp.btn.setFont(Font.font ("Impact", 18));
-      temp.btn.setText("" + temp.data);
+      //temp.btn.setText("" + temp.data);
       temp.btn.setPrefSize(boxDi, boxDi);
       temp.btn.setLayoutX(temp.boxX);
       temp.btn.setLayoutY(temp.boxY);
@@ -176,7 +176,35 @@ public class Grid extends Application //JDrawingFrame 780 x 560
       this.layout.getChildren().remove(temp.btn);
       temp.btn.setStyle("-fx-background-color: #D22B2B; ");
       temp.btn.setFont(Font.font ("Impact", 18));
-      temp.btn.setText("" + temp.data);
+      //temp.btn.setText("" + temp.data);
+      temp.btn.setPrefSize(boxDi, boxDi);
+      temp.btn.setLayoutX(temp.boxX);
+      temp.btn.setLayoutY(temp.boxY);
+      this.layout.getChildren().add(temp.btn); 
+   }
+   
+   public void drawPath(int i)
+   {
+      Node temp = nodes.get(i-1);
+      
+      this.layout.getChildren().remove(temp.btn);
+      temp.btn.setStyle("-fx-background-color: #FDDA0D; ");
+      temp.btn.setFont(Font.font ("Impact", 18));
+      //temp.btn.setText("" + temp.data);
+      temp.btn.setPrefSize(boxDi, boxDi);
+      temp.btn.setLayoutX(temp.boxX);
+      temp.btn.setLayoutY(temp.boxY);
+      this.layout.getChildren().add(temp.btn); 
+   }
+   
+   public void removePath(int i)
+   {
+      Node temp = nodes.get(i-1);
+      
+      this.layout.getChildren().remove(temp.btn);
+      temp.btn.setStyle("-fx-background-color: #B2BEB5; ");
+      temp.btn.setFont(Font.font ("Impact", 18));
+      //temp.btn.setText("" + temp.data);
       temp.btn.setPrefSize(boxDi, boxDi);
       temp.btn.setLayoutX(temp.boxX);
       temp.btn.setLayoutY(temp.boxY);
