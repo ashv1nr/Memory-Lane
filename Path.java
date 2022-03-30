@@ -36,10 +36,11 @@ public class Path extends Application //extends JDrawingFrame //780 x 560
 {
    private Grid grid;
    private final int MAX;
-   private int moves, tempInd;
+   private int moves, tempInd, n;
    private boolean run, refresh, printToString;
    private String sol;
    private ArrayList<Integer> solArr;
+   //private int[] resArr;
    
    public Path()
    {
@@ -47,6 +48,7 @@ public class Path extends Application //extends JDrawingFrame //780 x 560
       this.MAX = (int)( ( ( Math.pow(this.grid.getBY(),2) ) ) / 3.0 );
       this.moves = 0;
       this.tempInd = 0;
+      this.n = 0;
       this.run = true;
       this.refresh = true;
       this.printToString = true;
@@ -109,6 +111,8 @@ public class Path extends Application //extends JDrawingFrame //780 x 560
             }
          }
       }
+      
+      //this.resArr = new int[this.solArr.size()];
    }
    
    private Node pickDirc(Node temp)
@@ -278,17 +282,23 @@ public class Path extends Application //extends JDrawingFrame //780 x 560
             }
 
         });
-         
+        
         thread.setDaemon(true);
         thread.start();
+        tempInd = 0; 
    }
-       
+         
+   int scInc = 0;
    public void setColor(int d)
    {
-     if(d == this.solArr.get(0))
+     if(d == this.solArr.get(scInc))
      {
-        this.solArr.remove(0);
         this.grid.drawGreen(d);
+        scInc++;
+        if(scInc == this.solArr.size())
+        {
+            reset();
+        }
      }
      else
      {
@@ -323,6 +333,87 @@ public class Path extends Application //extends JDrawingFrame //780 x 560
             }
         });
         new Thread(sleeper).start();
+   }
+   
+   private void clearSolArr()
+   {
+      int s = this.solArr.size();
+      for(int i = 0; i < s; i ++)
+      {
+         this.solArr.remove(0);
+      }
+   }
+   
+   private void clearGridBtns(ArrayList<Integer> ta)
+   {
+      int s = ta.size();
+      for(int i = 0; i < s; i ++)
+      {
+         this.grid.removePath(ta.get(0));
+      }
+      
+      /*Grid g = this.grid;
+      
+      Thread thr = new Thread(new Runnable() {
+
+            @Override
+            public void run() {
+                Runnable updater = new Runnable() {
+
+                    @Override
+                    public void run() {
+                        if(tempInd == 0)
+                        {
+                           int x = -1;
+                           tempInd++;
+                        }
+                        else
+                        {
+                           g.removePath(ta.get((tempInd-1)));
+                           tempInd++;
+                        }
+                    }
+                };
+
+                
+                while (tempInd < (ta.size()) ) {
+                    try {
+                        
+                        if(tempInd == 0)
+                        {
+                           Thread.sleep(1000);
+                        }
+                        else
+                        {
+                           Thread.sleep(0);
+                        }
+                    } catch (InterruptedException ex) {
+                    }
+                    Platform.runLater(updater);
+                }
+            }
+
+        });
+         
+        thr.setDaemon(true);
+        thr.start();*/
+   }
+   
+   private void reset()
+   {
+      this.moves = 0;
+      this.tempInd = 0;
+      this.n = 0;
+      this.run = true;
+      this.refresh = true;
+      this.printToString = true;
+      this.sol = " ";
+      scInc = 0;
+      ArrayList<Integer> tempArr = this.solArr;
+      clearSolArr();
+      pathGen();
+      clearGridBtns(tempArr);
+      out.println(toString());
    }
    
     //@Override
