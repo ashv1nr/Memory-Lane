@@ -349,7 +349,7 @@ public class Path extends Application //extends JDrawingFrame //780 x 560
       int s = ta.size();
       for(int i = 0; i < s; i ++)
       {
-         this.grid.removePath(ta.get(0));
+         this.grid.removePath(ta.get(i));
       }
       
       /*Grid g = this.grid;
