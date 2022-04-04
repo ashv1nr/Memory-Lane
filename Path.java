@@ -35,6 +35,7 @@ import javafx.scene.text.Text;
 public class Path extends Application //extends JDrawingFrame //780 x 560
 {
    private Grid grid;
+   private Main main;
    private final int MAX;
    private int moves, tempInd, n;
    private boolean run, refresh, printToString;
@@ -45,7 +46,8 @@ public class Path extends Application //extends JDrawingFrame //780 x 560
    public Path()
    {
       this.grid = new Grid(7);
-      this.MAX = (int)( ( ( Math.pow(this.grid.getBY(),2) ) ) / 3.0 );
+      this.main = new Main();
+      this.MAX = (int)( ( ( Math.pow(this.grid.getBY(),2) ) ) / 4.0 );
       this.moves = 0;
       this.tempInd = 0;
       this.n = 0;
@@ -297,11 +299,13 @@ public class Path extends Application //extends JDrawingFrame //780 x 560
         scInc++;
         if(scInc == this.solArr.size())
         {
-            reset();
+            //this.grid.updateScore(true);
+            reset(true);
         }
      }
      else
      {
+        //this.grid.updateScore(false);
         this.grid.drawRed(d);
         pauseP(1000);
      }
@@ -352,29 +356,26 @@ public class Path extends Application //extends JDrawingFrame //780 x 560
          this.grid.removePath(ta.get(i));
       }
       
-      /*Grid g = this.grid;
+     /* Grid g = this.grid;
       
       Thread thr = new Thread(new Runnable() {
-
             @Override
             public void run() {
                 Runnable updater = new Runnable() {
-
                     @Override
                     public void run() {
                         if(tempInd == 0)
                         {
-                           int x = -1;
+                           //int x = -1;
                            tempInd++;
                         }
                         else
                         {
                            g.removePath(ta.get((tempInd-1)));
-                           tempInd++;
+                           //tempInd++;
                         }
                     }
                 };
-
                 
                 while (tempInd < (ta.size()) ) {
                     try {
@@ -392,14 +393,14 @@ public class Path extends Application //extends JDrawingFrame //780 x 560
                     Platform.runLater(updater);
                 }
             }
-
         });
          
         thr.setDaemon(true);
-        thr.start();*/
+        thr.start();
+        tempInd = 0; */
    }
    
-   private void reset()
+   private void reset(boolean b)
    {
       this.moves = 0;
       this.tempInd = 0;
@@ -411,6 +412,7 @@ public class Path extends Application //extends JDrawingFrame //780 x 560
       scInc = 0;
       ArrayList<Integer> tempArr = this.solArr;
       clearSolArr();
+      this.main.updateScore(b);
       pathGen();
       clearGridBtns(tempArr);
       out.println(toString());
@@ -426,4 +428,4 @@ public class Path extends Application //extends JDrawingFrame //780 x 560
    {  
       return this.sol;
    }
-}  
+}
