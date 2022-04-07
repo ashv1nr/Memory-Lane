@@ -36,18 +36,17 @@ public class Path extends Application //extends JDrawingFrame //780 x 560
 {
    private Grid grid;
    private Main main;
-   private final int MAX;
-   private int moves, tempInd, n;
+   private int by, max, moves, tempInd, n;
    private boolean run, refresh, printToString;
    private String sol;
    private ArrayList<Integer> solArr;
-   //private int[] resArr;
    
    public Path()
    {
-      this.grid = new Grid(7);
+      this.by = 4;
+      this.grid = new Grid(this.by);
       this.main = new Main();
-      this.MAX = (int)( ( ( Math.pow(this.grid.getBY(),2) ) ) / 4.0 );
+      this.max = (int)( ( ( Math.pow(this.by, 2) ) ) / 2.0 );
       this.moves = 0;
       this.tempInd = 0;
       this.n = 0;
@@ -66,7 +65,7 @@ public class Path extends Application //extends JDrawingFrame //780 x 560
       
       while(this.refresh == true)
       {
-         this.grid.gridGen();
+         this.grid.gridGen(this.by);
          if(printToString)
          {
             out.println(grid.toString());
@@ -74,7 +73,7 @@ public class Path extends Application //extends JDrawingFrame //780 x 560
          }
          this.sol = " ";
          this.solArr.clear();
-         n = (int)( (Math.random() * this.grid.getBY() ) + 1 ); 
+         n = (int)( (Math.random() * this.grid.getBy() ) + 1 ); 
          this.moves = 0;
          temp = this.grid.getHead();
          for(int i = 1; i < n; i++)
@@ -84,26 +83,26 @@ public class Path extends Application //extends JDrawingFrame //780 x 560
          this.sol += temp.data + " ";
          this.solArr.add(temp.data);
          this.moves++;
-         while( (this.run == true) && (this.moves <= this.MAX) )
+         while( (this.run == true) && (this.moves <= this.max) )
          {
-            if( (this.moves == this.MAX) && ( temp.data <= (this.grid.getLLSize() - this.grid.getBY()) ) )
+            if( (this.moves == this.max) && ( temp.data <= (this.grid.getLLSize() - this.grid.getBy()) ) )
             {
                this.run = true;
                this.moves++;
             }
-            else if( ( (temp.next == null) && (temp.prev == null) && (temp.up == null) && (temp.down== null) ) && ( temp.data <= (this.grid.getLLSize() - this.grid.getBY()) ) )
+            else if( ( (temp.next == null) && (temp.prev == null) && (temp.up == null) && (temp.down== null) ) && ( temp.data <= (this.grid.getLLSize() - this.grid.getBy()) ) )
             {
                this.run = true;
-               this.moves = this.MAX+1;
+               this.moves = this.max+1;
             }
-            else if( temp.data > (this.grid.getLLSize() - this.grid.getBY()) )
+            else if( temp.data > (this.grid.getLLSize() - this.grid.getBy()) )
             {
                this.run = false;
                this.refresh = false;
             }
             else
             {
-               if(this.moves < this.MAX)
+               if(this.moves < this.max)
                {
                   temp = pickDirc(temp);
                   this.sol += temp.data + " ";
@@ -113,8 +112,6 @@ public class Path extends Application //extends JDrawingFrame //780 x 560
             }
          }
       }
-      
-      //this.resArr = new int[this.solArr.size()];
    }
    
    private Node pickDirc(Node temp)
@@ -299,13 +296,11 @@ public class Path extends Application //extends JDrawingFrame //780 x 560
         scInc++;
         if(scInc == this.solArr.size())
         {
-            //this.grid.updateScore(true);
             reset(true);
         }
      }
      else
      {
-        //this.grid.updateScore(false);
         this.grid.drawRed(d);
         pauseP(1000);
      }
@@ -348,58 +343,6 @@ public class Path extends Application //extends JDrawingFrame //780 x 560
       }
    }
    
-   private void clearGridBtns(ArrayList<Integer> ta)
-   {
-      int s = ta.size();
-      for(int i = 0; i < s; i ++)
-      {
-         this.grid.removePath(ta.get(i));
-      }
-      
-     /* Grid g = this.grid;
-      
-      Thread thr = new Thread(new Runnable() {
-            @Override
-            public void run() {
-                Runnable updater = new Runnable() {
-                    @Override
-                    public void run() {
-                        if(tempInd == 0)
-                        {
-                           //int x = -1;
-                           tempInd++;
-                        }
-                        else
-                        {
-                           g.removePath(ta.get((tempInd-1)));
-                           //tempInd++;
-                        }
-                    }
-                };
-                
-                while (tempInd < (ta.size()) ) {
-                    try {
-                        
-                        if(tempInd == 0)
-                        {
-                           Thread.sleep(1000);
-                        }
-                        else
-                        {
-                           Thread.sleep(0);
-                        }
-                    } catch (InterruptedException ex) {
-                    }
-                    Platform.runLater(updater);
-                }
-            }
-        });
-         
-        thr.setDaemon(true);
-        thr.start();
-        tempInd = 0; */
-   }
-   
    private void reset(boolean b)
    {
       this.moves = 0;
@@ -413,8 +356,32 @@ public class Path extends Application //extends JDrawingFrame //780 x 560
       ArrayList<Integer> tempArr = this.solArr;
       clearSolArr();
       this.main.updateScore(b);
+      this.grid.clearGridBtns(tempArr);
+      if(this.by < 9)
+      {
+         this.by++;
+         if(this.by == 5)
+         {
+            this.max = (int)( ( ( Math.pow(this.by, 2) ) ) / 2.5 );
+         }
+         else if(this.by == 6)
+         {
+            this.max = (int)( ( ( Math.pow(this.by, 2) ) ) / 3.0 );
+         }
+         else if(this.by == 7)
+         {
+            this.max = (int)( ( ( Math.pow(this.by, 2) ) ) / 3.5 );
+         }
+         else if(this.by == 8)
+         {
+            this.max = (int)( ( ( Math.pow(this.by, 2) ) ) / 4.0 );
+         }
+         else
+         {
+            this.max = (int)( ( ( Math.pow(this.by, 2) ) ) / 4.5 );
+         }
+      }
       pathGen();
-      clearGridBtns(tempArr);
       out.println(toString());
    }
    
