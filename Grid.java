@@ -25,23 +25,22 @@ import javafx.scene.text.Text;
 
 public class Grid extends Application //JDrawingFrame 780 x 560
 {
-   private final int BY, FRAMEW, FRAMEH;
+   private final int FRAMEW, FRAMEH;
    private final double GRIDSIZE;
-   private int size, boxDi, startX, startY, strwt;
+   private int by, size, boxDi, startX, startY;
    private Node head, tail;
    private Group layout;
    private ArrayList<Node> nodes;
    
-   public Grid(int by)
+   public Grid(int b)
    {
-      this.BY = by;
+      this.by = b;
       this.FRAMEW = 780;
       this.FRAMEH = 560;
       this.GRIDSIZE = 450;
-      this.boxDi = (int)(GRIDSIZE/BY);
+      this.boxDi = (int)(GRIDSIZE/by);
       this.startX = (int)((FRAMEW-GRIDSIZE)/2);
       this.startY = (int)(((FRAMEH-GRIDSIZE)/2) + GRIDSIZE - boxDi);
-      this.strwt = 2;
       this.head = null;
       this.tail = null;
       this.size = 0; 
@@ -49,16 +48,16 @@ public class Grid extends Application //JDrawingFrame 780 x 560
       this.nodes = new ArrayList<Node>();
    }
    
-   public void gridGen()
+   public void gridGen(int b)
    {
-      clearGrid();
+      reset(b);
       
       int x = this.startX;
       int y = this.startY;
       int c = 0;
-      for(int i = 1; i <= (Math.pow(BY,2)); i++)
+      for(int i = 1; i <= (Math.pow(by,2)); i++)
       {
-         if(c < this.BY)
+         if(c < this.by)
          {
             addX(i,x,y);
             x += this.boxDi;
@@ -103,10 +102,10 @@ public class Grid extends Application //JDrawingFrame 780 x 560
    {
       Node temp = this.head;
       
-      for(int i = 1; i <= (this.size-this.BY); i ++)
+      for(int i = 1; i <= (this.size-this.by); i ++)
       {
          Node temp2 = temp;
-         for(int j = 1; j <= this.BY; j ++)
+         for(int j = 1; j <= this.by; j ++)
          {
             temp2 = temp2.next;
          }
@@ -121,9 +120,9 @@ public class Grid extends Application //JDrawingFrame 780 x 560
    {
       Node temp = this.head;
       
-      for(int i = 1; i < this.BY; i ++)
+      for(int i = 1; i < this.by; i ++)
       {
-         for(int j = 1; j <= this.BY; j ++)
+         for(int j = 1; j <= this.by; j ++)
          {
             temp = temp.next;
          }
@@ -132,11 +131,24 @@ public class Grid extends Application //JDrawingFrame 780 x 560
       }
    }
    
-   private void clearGrid()
+   private void reset(int b)
    {
+      this.by = b;
+      this.boxDi = (int)(GRIDSIZE/by);
+      this.startX = (int)((FRAMEW-GRIDSIZE)/2);
+      this.startY = (int)(((FRAMEH-GRIDSIZE)/2) + GRIDSIZE - this.boxDi);
       this.head = null;
       this.tail = null;
-      this.size = 0;
+      this.size = 0; 
+      for(Node temp: this.nodes)
+      {
+         this.layout.getChildren().remove(temp.btn);
+      }
+      int s = this.nodes.size();
+      for(int i = 0; i < s; i ++)
+      {
+         this.nodes.remove(0);
+      }
    }
    
    private void makeGrid()
@@ -211,6 +223,58 @@ public class Grid extends Application //JDrawingFrame 780 x 560
       this.layout.getChildren().add(temp.btn); 
    }
    
+   public void clearGridBtns(ArrayList<Integer> ta)
+   {
+      int s = ta.size();
+      for(int i = 0; i < s; i ++)
+      {
+         removePath(ta.get(i));
+      }
+      
+     /* Grid g = this.grid;
+      
+      Thread thr = new Thread(new Runnable() {
+            @Override
+            public void run() {
+                Runnable updater = new Runnable() {
+                    @Override
+                    public void run() {
+                        if(tempInd == 0)
+                        {
+                           //int x = -1;
+                           tempInd++;
+                        }
+                        else
+                        {
+                           g.removePath(ta.get((tempInd-1)));
+                           //tempInd++;
+                        }
+                    }
+                };
+                
+                while (tempInd < (ta.size()) ) {
+                    try {
+                        
+                        if(tempInd == 0)
+                        {
+                           Thread.sleep(1000);
+                        }
+                        else
+                        {
+                           Thread.sleep(0);
+                        }
+                    } catch (InterruptedException ex) {
+                    }
+                    Platform.runLater(updater);
+                }
+            }
+        });
+         
+        thr.setDaemon(true);
+        thr.start();
+        tempInd = 0; */
+   }
+   
    public Node getHead()
    {
       return this.head;
@@ -221,9 +285,9 @@ public class Grid extends Application //JDrawingFrame 780 x 560
       return this.tail;
    }
    
-   public int getBY()
+   public int getBy()
    {
-      return this.BY;
+      return this.by;
    }
    
    public int getLLSize()
@@ -247,7 +311,7 @@ public class Grid extends Application //JDrawingFrame 780 x 560
       String s = "";
       
       Node temp = this.tail;
-      for(int i = 1; i < BY; i ++)
+      for(int i = 1; i < by; i ++)
       {
          temp = temp.prev;
       }
@@ -261,7 +325,7 @@ public class Grid extends Application //JDrawingFrame 780 x 560
          }
          s += temp.data + "\n";
          
-         for(int i = 1; i < BY; i ++)
+         for(int i = 1; i < by; i ++)
          {
             temp = temp.prev;
          }
