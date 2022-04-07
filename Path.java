@@ -302,7 +302,8 @@ public class Path extends Application //extends JDrawingFrame //780 x 560
      else
      {
         this.grid.drawRed(d);
-        pauseP(1000);
+        //pauseP(1000);
+        reset(false);
      }
    }
    
@@ -357,29 +358,37 @@ public class Path extends Application //extends JDrawingFrame //780 x 560
       clearSolArr();
       this.main.updateScore(b);
       this.grid.clearGridBtns(tempArr);
-      if(this.by < 9)
+      if(b == true)
       {
-         this.by++;
-         if(this.by == 5)
+         if(this.by < 9)
          {
-            this.max = (int)( ( ( Math.pow(this.by, 2) ) ) / 2.5 );
+            this.by++;
+            if(this.by == 5)
+            {
+               this.max = (int)( ( ( Math.pow(this.by, 2) ) ) / 2.5 );
+            }
+            else if(this.by == 6)
+            {
+               this.max = (int)( ( ( Math.pow(this.by, 2) ) ) / 3.0 );
+            }
+            else if(this.by == 7)
+            {
+               this.max = (int)( ( ( Math.pow(this.by, 2) ) ) / 3.5 );
+            }
+            else if(this.by == 8)
+            {
+               this.max = (int)( ( ( Math.pow(this.by, 2) ) ) / 4.0 );
+            }
+            else
+            {
+               this.max = (int)( ( ( Math.pow(this.by, 2) ) ) / 4.5 );
+            }
          }
-         else if(this.by == 6)
-         {
-            this.max = (int)( ( ( Math.pow(this.by, 2) ) ) / 3.0 );
-         }
-         else if(this.by == 7)
-         {
-            this.max = (int)( ( ( Math.pow(this.by, 2) ) ) / 3.5 );
-         }
-         else if(this.by == 8)
-         {
-            this.max = (int)( ( ( Math.pow(this.by, 2) ) ) / 4.0 );
-         }
-         else
-         {
-            this.max = (int)( ( ( Math.pow(this.by, 2) ) ) / 4.5 );
-         }
+      }
+      else
+      {
+         this.by = 4;
+         this.max = (int)( ( ( Math.pow(this.by, 2) ) ) / 2.0 ); 
       }
       pathGen();
       out.println(toString());
