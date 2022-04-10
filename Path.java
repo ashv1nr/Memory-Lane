@@ -296,18 +296,17 @@ public class Path extends Application //extends JDrawingFrame //780 x 560
         scInc++;
         if(scInc == this.solArr.size())
         {
-            reset(true);
+            pauseP(1000, true);
         }
      }
      else
      {
         this.grid.drawRed(d);
-        //pauseP(1000);
-        reset(false);
+        pauseP(1000, false);
      }
    }
    
-   private void pauseP(int ms)
+   private void pauseP(int ms, boolean b)
    {
         Task<Void> sleeper = new Task<Void>() 
         {
@@ -329,7 +328,14 @@ public class Path extends Application //extends JDrawingFrame //780 x 560
             @Override
             public void handle(WorkerStateEvent event) 
             {
-                exit(0);
+                if(ms == 500)
+                {
+                  flashPath();
+                }
+                else
+                {
+                reset(b);
+                }
             }
         });
         new Thread(sleeper).start();
@@ -392,6 +398,7 @@ public class Path extends Application //extends JDrawingFrame //780 x 560
       }
       pathGen();
       out.println(toString());
+      pauseP(500, true);
    }
    
     //@Override
