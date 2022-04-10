@@ -28,6 +28,7 @@ public class Grid extends Application //JDrawingFrame 780 x 560
    private final int FRAMEW, FRAMEH;
    private final double GRIDSIZE;
    private int by, size, boxDi, startX, startY;
+   private String color1, color2;
    private Node head, tail;
    private Group layout;
    private ArrayList<Node> nodes;
@@ -41,6 +42,8 @@ public class Grid extends Application //JDrawingFrame 780 x 560
       this.boxDi = (int)(GRIDSIZE/by);
       this.startX = (int)((FRAMEW-GRIDSIZE)/2);
       this.startY = (int)(((FRAMEH-GRIDSIZE)/2) + GRIDSIZE - boxDi);
+      this.color1 = "#A7C7E7";
+      this.color2 = "#6F8FAF";
       this.head = null;
       this.tail = null;
       this.size = 0; 
@@ -74,13 +77,34 @@ public class Grid extends Application //JDrawingFrame 780 x 560
       }  
       
       addY();
+      if(this.by%2 == 0)
+      {
+         setNodeColors();
+      }
       makeGrid();
       breakSides();
    }
    
-   private void addX(int i,int x, int y)
+   private void addX(int d, int x, int y)
    {
-      Node n = new Node(i,x,y);
+      String oc = "";
+      if(this.by%2 != 0)
+      {
+         if(d%2 != 0)
+         {
+            oc = this.color1;
+         }
+         else
+         {
+            oc = this.color2;
+         }
+      }
+      else
+      {
+         oc = "#B2BEB5";
+      }
+      
+      Node n = new Node(d, x, y, oc);
       this.nodes.add(n);
       
       if(this.tail == null)
@@ -128,6 +152,37 @@ public class Grid extends Application //JDrawingFrame 780 x 560
          }
          temp.prev.next = null;
          temp.prev = null;
+      }
+   }
+   
+   private void setNodeColors()
+   {
+      Node temp = this.head;
+      boolean f = true;
+      
+      for(int i = 1; i <= this.by; i++)
+      {
+         for(int j = 1; j <= this.by; j++)
+         {
+            if(f == true)
+            {
+               temp.setOgCol(this.color1);
+            }
+            else
+            {
+               temp.setOgCol(this.color2);
+            }
+            if(temp.up != null)
+            { 
+               temp = temp.up;
+               f = (!f);
+            }
+         }
+         while(temp.down != null)
+         {
+            temp = temp.down;
+         }
+         temp = temp.next;
       }
    }
    
@@ -214,7 +269,7 @@ public class Grid extends Application //JDrawingFrame 780 x 560
       Node temp = nodes.get(i-1);
       
       this.layout.getChildren().remove(temp.btn);
-      temp.btn.setStyle("-fx-background-color: #B2BEB5; ");
+      temp.btn.setStyle("-fx-background-color: " + temp.ogCol + "; ");
       temp.btn.setFont(Font.font ("Impact", 18));
       //temp.btn.setText("" + temp.data);
       temp.btn.setPrefSize(boxDi, boxDi);
