@@ -27,22 +27,30 @@ public class Node extends Application
    private Main main;
    public Node prev, next, up, down;
    public int data, boxX, boxY;
+   public String ogCol;
    public Button btn;
    
-   public Node(int n, int x, int y)
+   public Node(int d, int x, int y, String oc)
    {
       this.main = new Main();
       this.prev = null;
       this.next = null;
       this.up = null;
       this.down = null;
-      this.data = n;
+      this.data = d;
       this.boxX = x;
       this.boxY = y;
+      this.ogCol = oc;
       this.btn = new Button();
-      this.btn.setStyle("-fx-background-color: #B2BEB5; ");
+      this.btn.setStyle("-fx-background-color: " + this.ogCol + "; ");
       this.btn.setOnAction(e -> this.main.setColor(this.data));
    }
+   
+   public void setOgCol(String oc)
+   {
+      this.ogCol = oc;
+      this.btn.setStyle("-fx-background-color: " + this.ogCol + "; ");
+   }  
    
     //@Override
     public void start(Stage primaryStage) throws Exception
