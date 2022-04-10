@@ -60,6 +60,7 @@ public class Main extends Application
      this.window.setScene(scene);   
      this.window.setTitle("Memory Lane");
      this.window.show();
+     this.path.pauseP(2000, true);
     }
     
     public void setColor(int d)
