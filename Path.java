@@ -36,6 +36,7 @@ public class Path extends Application //extends JDrawingFrame //780 x 560
 {
    private Grid grid;
    private Main main;
+   private final int RESETPAUSE, FLASHPAUSE;
    private int by, max, moves, tempInd, n;
    private boolean run, refresh, printToString;
    private String sol;
@@ -50,6 +51,8 @@ public class Path extends Application //extends JDrawingFrame //780 x 560
       this.moves = 0;
       this.tempInd = 0;
       this.n = 0;
+      this.RESETPAUSE = 1000;
+      this.FLASHPAUSE = 1750;
       this.run = true;
       this.refresh = true;
       this.printToString = true;
@@ -61,7 +64,7 @@ public class Path extends Application //extends JDrawingFrame //780 x 560
    {  
       int n;
       Node temp;
-      drawPathBtn();
+      //drawPathBtn();
       
       while(this.refresh == true)
       {
@@ -225,7 +228,7 @@ public class Path extends Application //extends JDrawingFrame //780 x 560
       return this.grid.getLayout();
    }
    
-   private void drawPathBtn()
+   /*private void drawPathBtn()
    {
       Button pathBtn = new Button();
       pathBtn.setFont(Font.font ("Impact", 14));
@@ -235,7 +238,7 @@ public class Path extends Application //extends JDrawingFrame //780 x 560
       pathBtn.setLayoutY(510);
       pathBtn.setOnAction(e -> flashPath());
       this.grid.getLayout().getChildren().add(pathBtn); 
-   }
+   }*/
    
    public void flashPath()
    {
@@ -296,17 +299,17 @@ public class Path extends Application //extends JDrawingFrame //780 x 560
         scInc++;
         if(scInc == this.solArr.size())
         {
-            pauseP(1000, true);
+            pauseP(this.RESETPAUSE, true);
         }
      }
      else
      {
         this.grid.drawRed(d);
-        pauseP(1000, false);
+        pauseP(this.RESETPAUSE, false);
      }
    }
    
-   private void pauseP(int ms, boolean b)
+   public void pauseP(int ms, boolean b)
    {
         Task<Void> sleeper = new Task<Void>() 
         {
@@ -328,13 +331,13 @@ public class Path extends Application //extends JDrawingFrame //780 x 560
             @Override
             public void handle(WorkerStateEvent event) 
             {
-                if(ms == 500)
+                if(ms != RESETPAUSE )//ms == FLASHPAUSE)
                 {
                   flashPath();
                 }
                 else
                 {
-                reset(b);
+                  reset(b);
                 }
             }
         });
@@ -398,7 +401,7 @@ public class Path extends Application //extends JDrawingFrame //780 x 560
       }
       pathGen();
       out.println(toString());
-      pauseP(500, true);
+      pauseP(this.FLASHPAUSE, b);
    }
    
     //@Override
