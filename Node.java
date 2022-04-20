@@ -1,56 +1,46 @@
 
-import static java.lang.System.*;
-
 import javafx.application.Application;
-import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
-import javafx.geometry.*;
-import javafx.stage.Stage;
-
-import javafx.scene.control.*;
 import javafx.scene.control.Button;
-import javafx.scene.control.Label;
-import javafx.scene.Group;
-import javafx.scene.layout.*;
-import javafx.scene.layout.StackPane;
-import javafx.scene.layout.VBox;
-import javafx.scene.paint.*;
-import javafx.scene.paint.Color;
-import javafx.scene.Scene;
-import javafx.scene.shape.*;
-import javafx.scene.text.*;
-import javafx.scene.text.Font;
-import javafx.scene.text.Text;
+import javafx.stage.Stage;
 
 public class Node extends Application
 {
-   private Main main;
-   public Node prev, next, up, down;
-   public int data, boxX, boxY;
-   public String ogCol;
+   public int nodeNum, btnX, btnY;
+   public String orgiColor;
    public Button btn;
+   public Node left, right, up, down;
+   private Main main;
    
-   public Node(int d, int x, int y, String oc)
+   public Node(int nn, int x, int y, int boxDi, String oc)
    {
       this.main = new Main();
-      this.prev = null;
-      this.next = null;
+      this.nodeNum = nn;
+      this.btnX = x;
+      this.btnY = y;
+      this.orgiColor = oc;
+      this.btn = new Button();
+      //this.btn.setFont(Font.font ("Impact", 18));
+      //this.btn.setText("" + this.nodeNum);
+      this.btn.setPrefSize(boxDi, boxDi);
+      this.btn.setLayoutX(this.btnX);
+      this.btn.setLayoutY(this.btnY);
+      this.btn.setStyle("-fx-background-color: " + this.orgiColor + "; ");
+      this.left = null;
+      this.right = null;
       this.up = null;
       this.down = null;
-      this.data = d;
-      this.boxX = x;
-      this.boxY = y;
-      this.ogCol = oc;
-      this.btn = new Button();
-      this.btn.setStyle("-fx-background-color: " + this.ogCol + "; ");
-      this.btn.setOnAction(e -> this.main.setColor(this.data));
    }
    
-   public void setOgCol(String oc)
+   public void setOrgiColor(String oc)
    {
-      this.ogCol = oc;
-      this.btn.setStyle("-fx-background-color: " + this.ogCol + "; ");
+      this.orgiColor = oc;
+      this.btn.setStyle("-fx-background-color: " + this.orgiColor + "; ");
    }  
+   
+   public void unlockBtn()
+   {
+      this.btn.setOnAction(e -> this.main.getPath().setBtnColor(this.nodeNum));
+   }
    
     //@Override
     public void start(Stage primaryStage) throws Exception
