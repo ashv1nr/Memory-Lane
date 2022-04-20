@@ -3,34 +3,27 @@ import static java.lang.System.*;
 import java.io.*;
 
 import javafx.application.Application;
-import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
-import javafx.geometry.*;
-import javafx.stage.Stage;
-
-import javafx.scene.control.*;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.Group;
-import javafx.scene.layout.*;
-import javafx.scene.layout.StackPane;
-import javafx.scene.layout.VBox;
-import javafx.scene.paint.*;
-import javafx.scene.paint.Color;
+/*import javafx.scene.media.*;
+import javafx.scene.media.Media;  
+import javafx.scene.media.MediaPlayer;  
+import javafx.scene.media.MediaView;*/
 import javafx.scene.Scene;
-import javafx.scene.shape.*;
-import javafx.scene.text.*;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
+import javafx.stage.Stage;
 
 public class Main extends Application
 {
-   private Path path;
-   private static Path tempPath;
-   private Stage window;
-   private Scene scene;
+   private static int score, sceneW, sceneH, refreshPauseLength, scoreLabelFtSize, scoreLabelX, scoreLabelY;
+   private static String scoLabFT, windowTitle;
    private static Label scoreLabel;
-   private int score;
+   private static Scene scene;
+   private static Stage window;
+   private static Intro intro;
+   private static Path path;
    
    public static void main(String[] args) throws IOException
    {      
@@ -40,45 +33,98 @@ public class Main extends Application
     //@Override
     public void start(Stage primaryStage) throws Exception
     {
-      this.score = 0;
+      ///////////////////////////////////makeshift constructor
+      score = 0;
+      sceneW = 780; //JDrawingFrame 780 x 560
+      sceneH = 560;
+      refreshPauseLength = 1500;
       
-      this.window = primaryStage;
+      scoreLabelFtSize = 20;
+      scoreLabelX = 650;
+      scoreLabelY = 20;
+      scoLabFT = "Verdana";
+      scoreLabel = new Label();
+         
+      windowTitle = "Memory Lane";
+      window = primaryStage;
       
-      this.path = new Path();
-      this.path.pathGen();
-      this.tempPath = this.path;
-      out.println(this.path);
+      intro = new Intro(); 
+      path = new Path();
+      scene = new Scene(path.getLayout(), sceneW, sceneH);
+      ///////////////////////////////////
       
-     this.scoreLabel = new Label();
-     this.scoreLabel.setFont(Font.font("Verdana", 20));
-     this.scoreLabel.setText("score: " + this.score);
-     this.scoreLabel.setLayoutX(650);
-     this.scoreLabel.setLayoutY(20);
-     this.path.getLayout().getChildren().add(this.scoreLabel);
+      setUpScoreLabel();
+      intro.setUpIntroUI();
+      window.setScene(intro.getIntroScene());
+      window.setTitle(windowTitle);
+      window.show();
+
+     /*Media media = new Media("memoryLane.mp3");
+     MediaPlayer mediaPlayer = new MediaPlayer(media);
+     mediaPlayer.setAutoPlay(true);*/
+    }
+    
+    public void playGame()
+    {
+      path.pathGen();
+      out.println(path);
+      
+      scene.setRoot(path.getLayout());
+      window.setScene(scene);
      
-     this.scene = new Scene(path.getLayout(), 780, 560);
-     this.window.setScene(scene);   
-     this.window.setTitle("Memory Lane");
-     this.window.show();
-     this.path.pauseP(2000, true);
+      path.pauseP(refreshPauseLength, true);
     }
     
-    public void setColor(int d)
+    public void endGame()
     {
-      this.tempPath.setColor(d);
+      exit(0);
     }
     
-    public void updateScore(boolean b)
+    private void setUpScoreLabel()
     {
-      if(b == true)
+      scoreLabel.setFont(Font.font(scoLabFT, scoreLabelFtSize));
+      scoreLabel.setText("score: " + score);
+      scoreLabel.setLayoutX(scoreLabelX);
+      scoreLabel.setLayoutY(scoreLabelY);
+      path.getLayout().getChildren().add(scoreLabel);
+    }
+    
+    public void updateScoreLabel(boolean bool)
+    {
+      if(bool == true)
       {
-         this.score++;
-         this.scoreLabel.setText("score: " + this.score);
+         score++;
+         scoreLabel.setText("score: " + score);
       }
       else
       {
-         this.score = 0;
-         this.scoreLabel.setText("score: " + this.score);
+         score = 0;
+         scoreLabel.setText("score: " + score);
       }
+    }
+    
+    public static int getSceneW()
+    {
+      return sceneW;
+    }
+    
+    public static int getSceneH()
+    {
+      return sceneH;
+    }
+    
+    public static int getRefreshPauseLength()
+    {
+      return refreshPauseLength;
+    }
+    
+    public static Path getPath()
+    {
+      return path;
+    }
+    
+    public static void setIntroScene()
+    {
+      window.setScene(intro.getIntroScene());
     }
 }
