@@ -1,54 +1,34 @@
 
-import static java.lang.System.*;
 import java.util.ArrayList;
-
 import javafx.application.Application;
-import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
-import javafx.geometry.*;
+import javafx.scene.Group;
+import javafx.scene.text.*;
 import javafx.stage.Stage;
 
-import javafx.scene.control.*;
-import javafx.scene.control.Button;
-import javafx.scene.control.Label;
-import javafx.scene.Group;
-import javafx.scene.layout.*;
-import javafx.scene.layout.StackPane;
-import javafx.scene.layout.VBox;
-import javafx.scene.paint.*;
-import javafx.scene.paint.Color;
-import javafx.scene.Scene;
-import javafx.scene.shape.*;
-import javafx.scene.text.*;
-import javafx.scene.text.Font;
-import javafx.scene.text.Text;
-
-public class Grid extends Application //JDrawingFrame 780 x 560
+public class Grid extends Application
 {
-   private final int FRAMEW, FRAMEH;
-   private final double GRIDSIZE;
-   private int by, size, boxDi, startX, startY;
-   private String color1, color2;
-   private Node head, tail;
+   private int by, sceneW, sceneH, boxDi, startX, startY;
+   private double gridSize;
+   private String btnColor1, btnColor2;
    private Group layout;
-   private ArrayList<Node> nodes;
+   private Node head, tail;
+   private ArrayList<Node> nodeList;
    
-   public Grid(int b)
+   public Grid(int b, int sw, int sh)
    {
       this.by = b;
-      this.FRAMEW = 780;
-      this.FRAMEH = 560;
-      this.GRIDSIZE = 450;
-      this.boxDi = (int)(GRIDSIZE/by);
-      this.startX = (int)((FRAMEW-GRIDSIZE)/2);
-      this.startY = (int)(((FRAMEH-GRIDSIZE)/2) + GRIDSIZE - boxDi);
-      this.color1 = "#A7C7E7";
-      this.color2 = "#6F8FAF";
-      this.head = null;
-      this.tail = null;
-      this.size = 0; 
+      this.sceneW = sw;
+      this.sceneH = sh;
+      this.gridSize = 450;
+      this.boxDi = (int)(this.gridSize/this.by);
+      this.startX = (int)((this.sceneW-this.gridSize)/2);
+      this.startY = (int)(((this.sceneH-this.gridSize)/2) + this.gridSize - this.boxDi);
+      this.btnColor1 = "#A7C7E7";
+      this.btnColor2 = "#6F8FAF";
       this.layout = new Group();
-      this.nodes = new ArrayList<Node>();
+      this.head = null;
+      this.tail = null; 
+      this.nodeList = new ArrayList<Node>();
    }
    
    public void gridGen(int b)
@@ -58,7 +38,7 @@ public class Grid extends Application //JDrawingFrame 780 x 560
       int x = this.startX;
       int y = this.startY;
       int c = 0;
-      for(int i = 1; i <= (Math.pow(by,2)); i++)
+      for(int i = 1; i <= (Math.pow(this.by,2)); i++)
       {
          if(c < this.by)
          {
@@ -81,22 +61,22 @@ public class Grid extends Application //JDrawingFrame 780 x 560
       {
          setNodeColors();
       }
-      makeGrid();
-      breakSides();
+      addBtnsToLayout();
+      breakSideLinks();
    }
    
-   private void addX(int d, int x, int y)
+   private void addX(int nn, int x, int y)
    {
       String oc = "";
       if(this.by%2 != 0)
       {
-         if(d%2 != 0)
+         if(nn%2 != 0)
          {
-            oc = this.color1;
+            oc = this.btnColor1;
          }
          else
          {
-            oc = this.color2;
+            oc = this.btnColor2;
          }
       }
       else
@@ -104,8 +84,8 @@ public class Grid extends Application //JDrawingFrame 780 x 560
          oc = "#B2BEB5";
       }
       
-      Node n = new Node(d, x, y, oc);
-      this.nodes.add(n);
+      Node n = new Node(nn, x, y, this.boxDi, oc);
+      this.nodeList.add(n);
       
       if(this.tail == null)
       {
@@ -114,33 +94,73 @@ public class Grid extends Application //JDrawingFrame 780 x 560
       }
       else
       {
-        n.prev = this.tail;
-        this.tail.next = n;
+        n.left = this.tail;
+        this.tail.right = n;
         this.tail = n; 
       }
-      
-      this.size++;
    }
    
   private void addY()
    {
       Node temp = this.head;
       
-      for(int i = 1; i <= (this.size-this.by); i ++)
+      for(int i = 1; i <= (this.nodeList.size()-this.by); i ++)
       {
          Node temp2 = temp;
          for(int j = 1; j <= this.by; j ++)
          {
-            temp2 = temp2.next;
+            temp2 = temp2.right;
          }
          temp2.down = temp;
          temp.up = temp2;
          
-         temp = temp.next;
+         temp = temp.right;
       }
    }
    
-   private void breakSides()
+   private void setNodeColors()
+   {
+      Node temp = this.head;
+      boolean bool = true;
+      
+      for(int i = 1; i <= this.by; i++)
+      {
+         for(int j = 1; j <= this.by; j++)
+         {
+            if(bool == true)
+            {
+               temp.setOrgiColor(this.btnColor1);
+            }
+            else
+            {
+               temp.setOrgiColor(this.btnColor2);
+            }
+            if(temp.up != null)
+            { 
+               temp = temp.up;
+               bool = (!bool);
+            }
+         }
+         while(temp.down != null)
+         {
+            temp = temp.down;
+         }
+         temp = temp.right;
+      }
+   }
+   
+   private void addBtnsToLayout()
+   {
+      Node temp = this.head;
+      
+      while(temp != null)
+      {  
+         this.layout.getChildren().add(temp.btn);
+         temp = temp.right;
+      }
+   }
+   
+   private void breakSideLinks()
    {
       Node temp = this.head;
       
@@ -148,196 +168,83 @@ public class Grid extends Application //JDrawingFrame 780 x 560
       {
          for(int j = 1; j <= this.by; j ++)
          {
-            temp = temp.next;
+            temp = temp.right;
          }
-         temp.prev.next = null;
-         temp.prev = null;
-      }
-   }
-   
-   private void setNodeColors()
-   {
-      Node temp = this.head;
-      boolean f = true;
-      
-      for(int i = 1; i <= this.by; i++)
-      {
-         for(int j = 1; j <= this.by; j++)
-         {
-            if(f == true)
-            {
-               temp.setOgCol(this.color1);
-            }
-            else
-            {
-               temp.setOgCol(this.color2);
-            }
-            if(temp.up != null)
-            { 
-               temp = temp.up;
-               f = (!f);
-            }
-         }
-         while(temp.down != null)
-         {
-            temp = temp.down;
-         }
-         temp = temp.next;
+         temp.left.right = null;
+         temp.left = null;
       }
    }
    
    private void reset(int b)
    {
       this.by = b;
-      this.boxDi = (int)(GRIDSIZE/by);
-      this.startX = (int)((FRAMEW-GRIDSIZE)/2);
-      this.startY = (int)(((FRAMEH-GRIDSIZE)/2) + GRIDSIZE - this.boxDi);
+      this.boxDi = (int)(this.gridSize/by);
+      this.startX = (int)((this.sceneW-this.gridSize)/2);
+      this.startY = (int)(((this.sceneH-this.gridSize)/2) + this.gridSize - this.boxDi);
       this.head = null;
       this.tail = null;
-      this.size = 0; 
-      for(Node temp: this.nodes)
+      for(Node temp: this.nodeList)
       {
          this.layout.getChildren().remove(temp.btn);
       }
-      int s = this.nodes.size();
+      int s = this.nodeList.size();
       for(int i = 0; i < s; i ++)
       {
-         this.nodes.remove(0);
+         this.nodeList.remove(0);
       }
    }
    
-   private void makeGrid()
+   public void drawGreenBtn(int i)
    {
-      Node temp = this.head;
-      
-      while(temp != null)
-      {  
-         temp.btn.setFont(Font.font ("Impact", 18));
-         //temp.btn.setText("" + temp.data);
-         temp.btn.setPrefSize(boxDi, boxDi);
-         temp.btn.setLayoutX(temp.boxX);
-         temp.btn.setLayoutY(temp.boxY);
-         this.layout.getChildren().add(temp.btn);
-         temp = temp.next;
-      }
-   }
-   
-   public void drawGreen(int i)
-   {
-      Node temp = nodes.get(i-1);
+      Node temp = nodeList.get(i-1);
       
       this.layout.getChildren().remove(temp.btn);
       temp.btn.setStyle("-fx-background-color: #50C878; ");
-      temp.btn.setFont(Font.font ("Impact", 18));
-      //temp.btn.setText("" + temp.data);
-      temp.btn.setPrefSize(boxDi, boxDi);
-      temp.btn.setLayoutX(temp.boxX);
-      temp.btn.setLayoutY(temp.boxY);
       this.layout.getChildren().add(temp.btn); 
    }
    
-   public void drawRed(int i)
+   public void drawRedBtn(int i)
    {
-      Node temp = nodes.get(i-1);
+      Node temp = nodeList.get(i-1);
       
       this.layout.getChildren().remove(temp.btn);
       temp.btn.setStyle("-fx-background-color: #D22B2B; ");
-      temp.btn.setFont(Font.font ("Impact", 18));
-      //temp.btn.setText("" + temp.data);
-      temp.btn.setPrefSize(boxDi, boxDi);
-      temp.btn.setLayoutX(temp.boxX);
-      temp.btn.setLayoutY(temp.boxY);
       this.layout.getChildren().add(temp.btn); 
    }
    
-   public void drawPath(int i)
+   public void drawPathBtn(int i)
    {
-      Node temp = nodes.get(i-1);
+      Node temp = nodeList.get(i-1);
       
       this.layout.getChildren().remove(temp.btn);
       temp.btn.setStyle("-fx-background-color: #FDDA0D; ");
-      temp.btn.setFont(Font.font ("Impact", 18));
-      //temp.btn.setText("" + temp.data);
-      temp.btn.setPrefSize(boxDi, boxDi);
-      temp.btn.setLayoutX(temp.boxX);
-      temp.btn.setLayoutY(temp.boxY);
       this.layout.getChildren().add(temp.btn); 
    }
    
-   public void removePath(int i)
+   public void setOgColorBtn(int i)
    {
-      Node temp = nodes.get(i-1);
+      Node temp = nodeList.get(i-1);
       
       this.layout.getChildren().remove(temp.btn);
-      temp.btn.setStyle("-fx-background-color: " + temp.ogCol + "; ");
-      temp.btn.setFont(Font.font ("Impact", 18));
-      //temp.btn.setText("" + temp.data);
-      temp.btn.setPrefSize(boxDi, boxDi);
-      temp.btn.setLayoutX(temp.boxX);
-      temp.btn.setLayoutY(temp.boxY);
+      temp.btn.setStyle("-fx-background-color: " + temp.orgiColor + "; ");
       this.layout.getChildren().add(temp.btn); 
    }
    
-   public void clearGridBtns(ArrayList<Integer> ta)
+   public void setOgColorBtns(ArrayList<Integer> tempArr)
    {
-      int s = ta.size();
+      int s = tempArr.size();
       for(int i = 0; i < s; i ++)
       {
-         removePath(ta.get(i));
+         setOgColorBtn(tempArr.get(i));
       }
-      
-     /* Grid g = this.grid;
-      
-      Thread thr = new Thread(new Runnable() {
-            @Override
-            public void run() {
-                Runnable updater = new Runnable() {
-                    @Override
-                    public void run() {
-                        if(tempInd == 0)
-                        {
-                           //int x = -1;
-                           tempInd++;
-                        }
-                        else
-                        {
-                           g.removePath(ta.get((tempInd-1)));
-                           //tempInd++;
-                        }
-                    }
-                };
-                
-                while (tempInd < (ta.size()) ) {
-                    try {
-                        
-                        if(tempInd == 0)
-                        {
-                           Thread.sleep(1000);
-                        }
-                        else
-                        {
-                           Thread.sleep(0);
-                        }
-                    } catch (InterruptedException ex) {
-                    }
-                    Platform.runLater(updater);
-                }
-            }
-        });
-         
-        thr.setDaemon(true);
-        thr.start();
-        tempInd = 0; */
    }
    
-   public Node getHead()
+   public void unlockBtns()
    {
-      return this.head;
-   }
-   
-   public Node getTail()
-   {
-      return this.tail;
+      for(int i = 0; i < this.nodeList.size(); i++)
+      {
+         this.nodeList.get(i).unlockBtn();
+      }
    }
    
    public int getBy()
@@ -347,12 +254,17 @@ public class Grid extends Application //JDrawingFrame 780 x 560
    
    public int getLLSize()
    {
-      return this.size;
+      return this.nodeList.size();
    }
    
    public Group getLayout()
    {
       return this.layout;
+   }
+   
+   public Node getHead()
+   {
+      return this.head;
    }
    
     //@Override
@@ -368,21 +280,21 @@ public class Grid extends Application //JDrawingFrame 780 x 560
       Node temp = this.tail;
       for(int i = 1; i < by; i ++)
       {
-         temp = temp.prev;
+         temp = temp.left;
       }
       
       while(temp != null)
       {
-         while(temp.next != null)
+         while(temp.right != null)
          {
-            s += temp.data + " ";
-            temp = temp.next;
+            s += temp.nodeNum + " ";
+            temp = temp.right;
          }
-         s += temp.data + "\n";
+         s += temp.nodeNum + "\n";
          
          for(int i = 1; i < by; i ++)
          {
-            temp = temp.prev;
+            temp = temp.left;
          }
          temp = temp.down;
       }
