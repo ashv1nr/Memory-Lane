@@ -32,12 +32,12 @@ import javafx.scene.text.*;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 
-public class Path extends Application //extends JDrawingFrame //780 x 560
+public class Path extends Application
 {
    private Grid grid;
    private Main main;
    private final int RESETPAUSE, FLASHPAUSE;
-   private int by, max, moves, tempInd, n;
+   private int by, max, moves, tempInd;
    private boolean run, refresh, printToString;
    private String sol;
    private ArrayList<Integer> solArr;
@@ -45,12 +45,11 @@ public class Path extends Application //extends JDrawingFrame //780 x 560
    public Path()
    {
       this.by = 4;
-      this.grid = new Grid(this.by);
       this.main = new Main();
+      this.grid = new Grid(this.by, this.main.getSceneW(), this.main.getSceneH());
       this.max = (int)( ( ( Math.pow(this.by, 2) ) ) / 2.0 );
       this.moves = 0;
       this.tempInd = 0;
-      this.n = 0;
       this.RESETPAUSE = 1000;
       this.FLASHPAUSE = 1750;
       this.run = true;
@@ -64,7 +63,8 @@ public class Path extends Application //extends JDrawingFrame //780 x 560
    {  
       int n;
       Node temp;
-      //drawPathBtn();
+      //drawPathBtnBtn();
+      out.println(this.main.getSceneW());
       
       while(this.refresh == true)
       {
@@ -81,24 +81,24 @@ public class Path extends Application //extends JDrawingFrame //780 x 560
          temp = this.grid.getHead();
          for(int i = 1; i < n; i++)
          {
-            temp = temp.next;
+            temp = temp.right;
          }
-         this.sol += temp.data + " ";
-         this.solArr.add(temp.data);
+         this.sol += temp.nodeNum + " ";
+         this.solArr.add(temp.nodeNum);
          this.moves++;
          while( (this.run == true) && (this.moves <= this.max) )
          {
-            if( (this.moves == this.max) && ( temp.data <= (this.grid.getLLSize() - this.grid.getBy()) ) )
+            if( (this.moves == this.max) && ( temp.nodeNum <= (this.grid.getLLSize() - this.grid.getBy()) ) )
             {
                this.run = true;
                this.moves++;
             }
-            else if( ( (temp.next == null) && (temp.prev == null) && (temp.up == null) && (temp.down== null) ) && ( temp.data <= (this.grid.getLLSize() - this.grid.getBy()) ) )
+            else if( ( (temp.right == null) && (temp.left == null) && (temp.up == null) && (temp.down== null) ) && ( temp.nodeNum <= (this.grid.getLLSize() - this.grid.getBy()) ) )
             {
                this.run = true;
                this.moves = this.max+1;
             }
-            else if( temp.data > (this.grid.getLLSize() - this.grid.getBy()) )
+            else if( temp.nodeNum > (this.grid.getLLSize() - this.grid.getBy()) )
             {
                this.run = false;
                this.refresh = false;
@@ -108,8 +108,8 @@ public class Path extends Application //extends JDrawingFrame //780 x 560
                if(this.moves < this.max)
                {
                   temp = pickDirc(temp);
-                  this.sol += temp.data + " ";
-                  this.solArr.add(temp.data);
+                  this.sol += temp.nodeNum + " ";
+                  this.solArr.add(temp.nodeNum);
                   this.moves++;
                }
             }
@@ -121,7 +121,7 @@ public class Path extends Application //extends JDrawingFrame //780 x 560
    {
       int n  = (int)( (Math.random() * 4 ) + 1 );
       
-      if( (n == 1) && (temp.next != null) )
+      if( (n == 1) && (temp.right != null) )
       {
          if(temp.up != null)
          {
@@ -129,10 +129,10 @@ public class Path extends Application //extends JDrawingFrame //780 x 560
             temp.up = null;
          }
          
-         if(temp.prev != null)
+         if(temp.left != null)
          {
-            temp.prev.next = null;
-            temp.prev = null;
+            temp.left.right = null;
+            temp.left = null;
          }
             
          if(temp.down != null)
@@ -141,11 +141,11 @@ public class Path extends Application //extends JDrawingFrame //780 x 560
             temp.down = null;
          }
          
-         temp = temp.next;
-         temp.prev = null;
+         temp = temp.right;
+         temp.left = null;
          return temp;
       }
-      else if( (n == 2) && (temp.prev != null) )
+      else if( (n == 2) && (temp.left != null) )
       {
          if(temp.up != null)
          {
@@ -153,10 +153,10 @@ public class Path extends Application //extends JDrawingFrame //780 x 560
             temp.up = null;
          }
          
-         if(temp.next != null)
+         if(temp.right != null)
          {
-            temp.next.prev = null;
-            temp.next = null;
+            temp.right.left = null;
+            temp.right = null;
          }
          
          if(temp.down != null)
@@ -165,16 +165,16 @@ public class Path extends Application //extends JDrawingFrame //780 x 560
             temp.down = null;
          }
          
-         temp = temp.prev;
-         temp.next = null;
+         temp = temp.left;
+         temp.right = null;
          return temp;
       }
       else if( (n == 3) && (temp.up != null) )
       {
-         if(temp.prev != null)
+         if(temp.left != null)
          {
-            temp.prev.next = null;
-            temp.prev = null;
+            temp.left.right = null;
+            temp.left = null;
          }
          
          if(temp.down != null)
@@ -183,10 +183,10 @@ public class Path extends Application //extends JDrawingFrame //780 x 560
             temp.down = null;
          }
          
-         if(temp.next != null)
+         if(temp.right != null)
          {
-            temp.next.prev = null;
-            temp.next = null;
+            temp.right.left = null;
+            temp.right = null;
          }
          
          temp = temp.up;
@@ -195,10 +195,10 @@ public class Path extends Application //extends JDrawingFrame //780 x 560
       }
       else if( (n == 4) && (temp.down != null) )
       {
-         if(temp.prev != null)
+         if(temp.left != null)
          {
-            temp.prev.next = null;
-            temp.prev = null;
+            temp.left.right = null;
+            temp.left = null;
          }
          
          if(temp.up != null)
@@ -207,10 +207,10 @@ public class Path extends Application //extends JDrawingFrame //780 x 560
             temp.up = null;
          }
          
-         if(temp.next != null)
+         if(temp.right != null)
          {
-            temp.next.prev = null;
-            temp.next = null;
+            temp.right.left = null;
+            temp.right = null;
          }
          
          temp = temp.down;
@@ -228,7 +228,7 @@ public class Path extends Application //extends JDrawingFrame //780 x 560
       return this.grid.getLayout();
    }
    
-   /*private void drawPathBtn()
+   /*private void drawPathBtnBtn()
    {
       Button pathBtn = new Button();
       pathBtn.setFont(Font.font ("Impact", 14));
@@ -256,18 +256,18 @@ public class Path extends Application //extends JDrawingFrame //780 x 560
                     public void run() {
                         if(tempInd == 0)
                         {
-                           g.drawPath(sa.get(tempInd));
+                           g.drawPathBtn(sa.get(tempInd));
                            tempInd++;
                         }
                         else if(tempInd < sa.size() )
                         {
-                           g.drawPath(sa.get(tempInd));
-                           g.removePath(sa.get((tempInd-1)));
+                           g.drawPathBtn(sa.get(tempInd));
+                           g.setOgColorBtn(sa.get((tempInd-1)));
                            tempInd++;
                         }
                         else
                         {
-                           g.removePath(sa.get((tempInd-1)));
+                           g.setOgColorBtn(sa.get((tempInd-1)));
                            tempInd++;
                         }
                     }
@@ -280,6 +280,10 @@ public class Path extends Application //extends JDrawingFrame //780 x 560
                     } catch (InterruptedException ex) {
                     }
                     Platform.runLater(updater);
+                    if(tempInd == sa.size())
+                    {
+                        g.unlockBtns();
+                    }
                 }
             }
 
@@ -291,11 +295,11 @@ public class Path extends Application //extends JDrawingFrame //780 x 560
    }
          
    int scInc = 0;
-   public void setColor(int d)
+   public void setBtnColor(int d)
    {
      if(d == this.solArr.get(scInc))
      {
-        this.grid.drawGreen(d);
+        this.grid.drawGreenBtn(d);
         scInc++;
         if(scInc == this.solArr.size())
         {
@@ -304,7 +308,7 @@ public class Path extends Application //extends JDrawingFrame //780 x 560
      }
      else
      {
-        this.grid.drawRed(d);
+        this.grid.drawRedBtn(d);
         pauseP(this.RESETPAUSE, false);
      }
    }
@@ -357,7 +361,6 @@ public class Path extends Application //extends JDrawingFrame //780 x 560
    {
       this.moves = 0;
       this.tempInd = 0;
-      this.n = 0;
       this.run = true;
       this.refresh = true;
       this.printToString = true;
@@ -365,8 +368,8 @@ public class Path extends Application //extends JDrawingFrame //780 x 560
       scInc = 0;
       ArrayList<Integer> tempArr = this.solArr;
       clearSolArr();
-      this.main.updateScore(b);
-      this.grid.clearGridBtns(tempArr);
+      this.main.updateScoreLabel(b);
+      this.grid.setOgColorBtns(tempArr);
       if(b == true)
       {
          if(this.by < 9)
@@ -393,15 +396,16 @@ public class Path extends Application //extends JDrawingFrame //780 x 560
                this.max = (int)( ( ( Math.pow(this.by, 2) ) ) / 4.5 );
             }
          }
+         pathGen();
+         out.println(toString());
+         pauseP(this.FLASHPAUSE, b);
       }
       else
       {
          this.by = 4;
-         this.max = (int)( ( ( Math.pow(this.by, 2) ) ) / 2.0 ); 
+         this.max = (int)( ( ( Math.pow(this.by, 2) ) ) / 2.0 );
+         this.main.setIntroScene();
       }
-      pathGen();
-      out.println(toString());
-      pauseP(this.FLASHPAUSE, b);
    }
    
     //@Override
