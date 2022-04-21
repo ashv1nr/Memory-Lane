@@ -26,7 +26,7 @@ public class Intro extends Application
       explaLabX = (int)((1/10.0) * main.getSceneW());
       explaLabY = (int)((1/10.0) * main.getSceneH());;
       explaLabFT = "Verdana";
-      explaLabText = "Memorize the flashing yellow buttons and" + "\n" + "click them in order to advance to the next level." + "\n" + "Click the \"PLAY!\" button to advance" + "\n" + "or the \"QUIT\" button to end the program." ;
+      explaLabText = "Memorize the flashing yellow buttons and" + "\n" + "click them in order once they're done flashing" + "\n" + "in order to advance to the next level." + "\n\n" + "Click the \"PLAY!\" button to advance" + "\n" + "or the \"QUIT\" button to end the program." ;
       explaLabel = new Label();
       btnW = 150;
       btnLengOfWidtPerct = .8;
