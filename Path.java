@@ -63,15 +63,13 @@ public class Path extends Application
    {  
       int n;
       Node temp;
-      //drawPathBtnBtn();
-      out.println(this.main.getSceneW());
       
       while(this.refresh == true)
       {
          this.grid.gridGen(this.by);
          if(printToString)
          {
-            out.println(grid.toString());
+            //out.println(grid.toString());
             printToString = false;
          }
          this.sol = " ";
@@ -227,18 +225,6 @@ public class Path extends Application
    {
       return this.grid.getLayout();
    }
-   
-   /*private void drawPathBtnBtn()
-   {
-      Button pathBtn = new Button();
-      pathBtn.setFont(Font.font ("Impact", 14));
-      pathBtn.setText("See path");
-      pathBtn.setPrefSize(75, 25);
-      pathBtn.setLayoutX(25);
-      pathBtn.setLayoutY(510);
-      pathBtn.setOnAction(e -> flashPath());
-      this.grid.getLayout().getChildren().add(pathBtn); 
-   }*/
    
    public void flashPath()
    {
@@ -397,7 +383,7 @@ public class Path extends Application
             }
          }
          pathGen();
-         out.println(toString());
+         //out.println(toString());
          pauseP(this.FLASHPAUSE, b);
       }
       else
