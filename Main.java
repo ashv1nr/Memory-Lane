@@ -67,7 +67,7 @@ public class Main extends Application
     public void playGame()
     {
       path.pathGen();
-      out.println(path);
+      //out.println(path);
       
       scene.setRoot(path.getLayout());
       window.setScene(scene);
